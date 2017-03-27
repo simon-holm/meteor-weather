@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 //URL
-const OPEN_WEATHER_MAP_URL = 'https://crossorigin.me/http://api.openweathermap.org/data/2.5/forecast?';
+const OPEN_WEATHER_MAP_URL = 'http://api.openweathermap.org/data/2.5/forecast?';
 const FORMAT = 'metric';
 const APIKEY = 'e6d4d600af44fb788e52102d2c5198b0';
 
