@@ -20,7 +20,7 @@ export default class WeatherForm extends React.Component {
 			<div className="card-panel white">
 				<form onSubmit={this.onFormSubmit}>
 					<div>
-						<input type="search" ref="location" placeholder="Search weather by city"/>
+						<input type="search" ref="location" placeholder="Search weather by City"/>
 					</div>
 					<div className="center-align">
 						<button className="btn">Get Weather</button>
