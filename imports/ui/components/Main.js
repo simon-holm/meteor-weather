@@ -8,7 +8,7 @@ export default class Main extends React.Component {
 			<div className="col s12 m12">
 				<Nav/>
 				<div className="row">
-					<div className="col s12 m8 offset-m2">
+					<div className="col s12 m10 offset-m1">
 					{this.props.children}
 					</div>
 				</div> 

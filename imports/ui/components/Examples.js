@@ -9,7 +9,7 @@ export default class Examples extends React.Component {
 	}
 	render() {
 		return (
-			<div>
+			<div className="col s12 m6 offset-m3">
             <h1 className="center-align">Examples</h1>
             <ul className="collection with-header center-align">
 				<li className="collection-header"><h5>Here are a few example locations to try out</h5></li>
@@ -20,7 +20,7 @@ export default class Examples extends React.Component {
 					<button className="waves-effect waves-light btn" onClick={() => {this.linkBtn('Stockholm')}}>Stockholm, Sweden</button>
                 </li>
                 <li className="collection-item">
-					<button className="waves-effect waves-light btn" onClick={() => {this.linkBtn('Coolangatta')}}>Coolangatta, Australia</button>
+					<button className="waves-effect waves-light btn" onClick={() => {this.linkBtn('Billinga')}}>Billinga, Australia</button>
                 </li>
                 <li className="collection-item">
 					<button className="waves-effect waves-light btn" onClick={() => {this.linkBtn('Wellington')}}>Wellington, New Zealand</button>

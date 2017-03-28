@@ -43,7 +43,7 @@ export default class Nav extends React.Component {
 						<form onSubmit={this.onSearch}>
 							<div className="input-field">
 								<input type="search" ref="search" id="search" placeholder="Search weather by city"/>
-								<label className="label-icon" for="search"><i className="material-icons">search</i></label>
+								<label className="label-icon" htmlFor="search"><i className="material-icons">search</i></label>
 							</div>
 						</form>
 					</div>

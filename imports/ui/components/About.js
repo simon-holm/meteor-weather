@@ -5,7 +5,7 @@ import React from 'react';
 export default class About extends React.Component {
 	render() {
 		return (
-			<div>
+			<div className="col s12 m8 offset-m2">
 				<h1 className="center-align">About</h1>
 				<ul className="collection with-header center-align">
 					<li className="collection-header">

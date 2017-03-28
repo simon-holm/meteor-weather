@@ -76,10 +76,15 @@ export default class Weather extends React.Component {
 
 		return (
 			<div>
-				<h1 className="center-align"><strong>What's the weather like?</strong></h1>
-                <WeatherForm onSearch={this.handleSearch}/>
-                {renderMessage()}
-                {renderError()}
+				<div className="col s12 m6 offset-m3">
+					<h1 className="center-align"><strong>What's the weather like?</strong></h1>
+                	<WeatherForm onSearch={this.handleSearch}/>
+				</div>
+				<div className="col s12 m12">
+					{renderMessage()}
+                	{renderError()}
+				</div>
+                
 			</div>
 		);
 	}
