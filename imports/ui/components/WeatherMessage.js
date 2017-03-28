@@ -1,63 +1,54 @@
 import React from 'react';
 
+import buildReportDaysList from './../../api/WeatherLogic';
+
 export default  WeatherMessage = ({temp, location, description, data}) => {
-	
-	weatherReportFull = [];
-	uniqueDays = [];
-	
+
 	let weatherlist = data.list;
+	let reportDays = buildReportDaysList(weatherlist);
 
-	weatherlist.map((weather, index) => {
-		let uniqueDate = weather.dt_txt.split(" ");
-		let uniqueDay = uniqueDate[0];
-		let uniqueTime = uniqueDate[1];
-
-		if (uniqueDays.indexOf(weather.dt_txt.split(" ")[0]) === -1) {
-			uniqueDays.push(weather.dt_txt.split(" ")[0]);
-		}
-		
-	});
-	console.log(uniqueDays);
-	debugger;
 	return (
 		<div>
 			<div className="row">
-				<div className="col s12 m8 offset-m2">
+				<div className="col s12 m12 l8 offset-l2">
 					<div className="card">
 						<div className="card-image">
 							<img src="https://photos.smugmug.com/Landscapes/Panoramics/i-7S2gZ56/0/M/Heading%20to%20the%20key%20summit%20distant%20rain%20storm%20and%20light%20play-M.jpg" alt="{location} weather pic"/>
-							<span className="card-title">{location}</span>
+							<span className="card-title"><h4>{location}</h4></span>
 						</div>
 						<div className="card-content">
-							<p>Its currently {description} and {temp} degrees celsius in {location}!</p>
+							<h5>Its currently {description} and {temp} degrees celsius in {location}!</h5>
 						</div>
 					</div>
 				</div>
 			</div>
-			<h4>5 day outlook for {location}</h4>
-			{weatherlist.map((weather, index) => {
-				let uniqueDate = weather.dt_txt.split(" ");
-				let uniqueDay = uniqueDate[0];
-				let uniqueTime = uniqueDate[1];
-
-				if (weather.dt_txt.split(" ")[0] == uniqueDay) {
-					return (
-						<div className="col s12 m8 offset-m2">
-							<div className="card" key={uniqueDay}>
-								<span className="card-title">{uniqueDay}</span>
+			<h4 className="center">5 day outlook for {location}</h4>
+			<div className="row">
+			
+			{reportDays.map((day) => {
+				return (
+					<div className="col s12 m6 l4">
+						<div className="card">
+							<div className="card-image">
+								<img src="./images/weather_icon.png" alt="weather image"/>
+								<span className="card-title">{day}</span>
 							</div>
-							<div className="card-content">
-								<p>Its currently {description} and {temp} degrees celsius in {location}!</p>
-							</div>
+							<ul className="collection">
+							{weatherlist.map((report) => {
+								let time = report.dt_txt.split(" ")[1].substr(0, 5);
+								if (report.dt_txt.split(" ")[0] === day) {
+									return (
+										<li className="collection-item">Time: <strong>{time}</strong><br/>Conditions: <strong>{report.weather[0].description}</strong> & <strong>{report.main.temp}&deg;C</strong></li>
+									);
+								}
+							})}
+							</ul>
 						</div>
-						)
-					
-				} else {
-					let uniqueDay = weather.dt_txt.split(" ")[0];
-				}
-					
-				
+					</div>
+				);
 			})}
+
+			</div>
 		</div>
 	);
 }
