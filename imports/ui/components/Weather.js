@@ -3,6 +3,7 @@ import React from 'react';
 import WeatherForm from './WeatherForm';
 import WeatherMessage from './WeatherMessage';
 import getWeather from '../../api/openWeatherMap';
+import {getLatLong} from '../../api/Geocode';
 
 export default class Weather extends React.Component {
 	constructor() {
@@ -24,6 +25,7 @@ export default class Weather extends React.Component {
 			data: undefined
 		});
 
+
 		getWeather(location).then((data) => {
 			that.setState({
 				location: data.city.name,
@@ -32,6 +34,9 @@ export default class Weather extends React.Component {
 				isLoading: false,
 				data: data
 			});
+			getLatLong(data.city.name).then((geodata) => {
+				console.log(geodata);
+			})
 		}, (e) => {
 			that.setState({
 				isLoading: false,
