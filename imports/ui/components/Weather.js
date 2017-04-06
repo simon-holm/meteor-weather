@@ -22,7 +22,8 @@ export default class Weather extends React.Component {
 			errorMessage: undefined,
 			location: undefined,
 			temp: undefined,
-			data: undefined
+			data: undefined,
+			pictureUrl: undefined,
 		});
 
 
@@ -31,11 +32,14 @@ export default class Weather extends React.Component {
 				location: data.city.name,
 				temp: data.list[0].main.temp,
 				description: data.list[0].weather[0].description,
-				isLoading: false,
 				data: data
 			});
 			getLatLong(data.city.name).then((geodata) => {
 				console.log(geodata);
+				that.setState({
+					pictureUrl: "www.google.com", // CHANGE THIS!!!
+					isLoading: false,
+				})
 			})
 		}, (e) => {
 			that.setState({
@@ -64,13 +68,13 @@ export default class Weather extends React.Component {
     }
 
 	render() {
-		let {isLoading, temp, location, description, errorMessage, data} = this.state;
+		let {isLoading, temp, location, description, errorMessage, data, pictureUrl} = this.state;
 
 		renderMessage = () => {
 			if (isLoading) {
 				return <h3 className="text-center">Fetching weather...</h3>;
 			} else if (temp && location && description) {
-                return <WeatherMessage description={description} location={location} temp={temp} data={data}/>;
+                return <WeatherMessage description={description} location={location} temp={temp} data={data} pictureUrl={pictureUrl}/>;
 			}
 		}
 		renderError = () => {

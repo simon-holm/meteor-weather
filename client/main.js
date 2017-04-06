@@ -8,6 +8,8 @@ import Weather from './../imports/ui/components/Weather';
 import About from './../imports/ui/components/About';
 import Examples from './../imports/ui/components/Examples';
 
+import { getLatLong } from '../imports/api/Geocode';
+
 
 const router = (
 	<Router history={hashHistory}>
@@ -21,4 +23,5 @@ const router = (
 
 Meteor.startup(() => {
     ReactDOM.render(router, document.getElementById('app'));
+	getLatLong("Ystad");
 });

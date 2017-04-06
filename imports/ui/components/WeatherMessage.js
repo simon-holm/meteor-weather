@@ -2,7 +2,7 @@ import React from 'react';
 
 import buildReportDaysList from './../../api/WeatherLogic';
 
-export default  WeatherMessage = ({temp, location, description, data}) => {
+export default  WeatherMessage = ({temp, location, description, data, pictureUrl}) => {
 
 	let weatherlist = data.list;
 	let reportDays = buildReportDaysList(weatherlist);
@@ -12,7 +12,7 @@ export default  WeatherMessage = ({temp, location, description, data}) => {
 			<div className="row">
 				<div className="col s12 m12 l8 offset-l2">
 					<div className="card">
-						<div className="card-image">
+						<div className="card-image"> //below replace with pictureUrl
 							<img src="https://photos.smugmug.com/Landscapes/Panoramics/i-7S2gZ56/0/M/Heading%20to%20the%20key%20summit%20distant%20rain%20storm%20and%20light%20play-M.jpg" alt="{location} weather pic"/>
 							<span className="card-title"><h4>{location}</h4></span>
 						</div>
