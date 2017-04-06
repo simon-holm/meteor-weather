@@ -7,27 +7,69 @@ const googlePlaceUrl = "https://maps.googleapis.com/maps/api/place/radarsearch/j
 const radius = "&radius=5000";
 const placeType = "&type=point_of_interest"; // Set type!
 
-export const getLatLong = (city) => {
+
+const geoCodeCityToLatLng = (city) => {
 	const encodedCity = encodeURIComponent(city);
 	const geoUrl = `${geocodeUrl}${encodedCity}${geocodeApiKey}`;
 
-	axios.get(geoUrl).then((res) => {
+	const location = axios.get(geoUrl).then((response) => {
 		console.log("geoPosition");
-		console.log(res.data.results[0].geometry.location);
-		const latLng = res.data.results[0].geometry.location;
+		console.log(response.data.results[0].geometry.location);
+		const latLng = response.data.results[0].geometry.location;
 		return latLng;
-		}).then((latLng) => {
-			console.log(latLng);
-			const lat = latLng.lat;
-			const lng = latLng.lng;
-			const placesUrl = `${googlePlaceUrl}${lat},${lng}${radius}${placeType}${placesApiKey}`;
-			console.log(placesUrl);
-			return placesUrl;
-		}).then((placesUrl) => {
-			axios.get(placesUrl).then((res) => {
-				console.log(res.data);
-			})
+	});
+	return location;
+};
+
+const buildPlacesURL = (latLngObj) => {
+	const lat = latLngObj.lat;
+	const lng = latLngObj.lng;
+	const placesURL = `${googlePlaceUrl}${lat},${lng}${radius}${placeType}${placesApiKey}`;
+	return placesURL;
+};
+
+const placesResponse = (placesURL) => {
+	axios.get(placesURL)
+		.then((response) => {
+
 		})
+}
+
+
+export const getLatLong = (city) => {
+	const builtPictureRef = geoCodeCityToLatLng(city)
+		.then((response) => {
+			buildPlacesURL(response)
+		});
+	console.log(builtPictureRef);
+}
+
+
+
+
+// export const getLatLong = (city) => {
+// 	const encodedCity = encodeURIComponent(city);
+// 	const geoUrl = `${geocodeUrl}${encodedCity}${geocodeApiKey}`;
+
+// 	axios.get(geoUrl).then((res) => {
+// 		console.log("geoPosition");
+// 		console.log(res.data.results[0].geometry.location);
+// 		const latLng = res.data.results[0].geometry.location;
+// 		return latLng;
+// 		}).then((latLng) => {
+// 			console.log(latLng);
+// 			const lat = latLng.lat;
+// 			const lng = latLng.lng;
+// 			const placesUrl = `${googlePlaceUrl}${lat},${lng}${radius}${placeType}${placesApiKey}`;
+// 			console.log(placesUrl);
+// 			return placesUrl;
+// 		}).then((placesUrl) => {
+// 			axios.get(placesUrl).then((res) => {
+// 				console.log(res);
+// 			})
+// 		})
+
+
 	// Make call to google Places
 		// return place picture reference.
 
