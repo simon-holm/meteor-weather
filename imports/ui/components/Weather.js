@@ -75,7 +75,8 @@ export default class Weather extends React.Component {
 		}
 		renderError = () => {
 			if (typeof errorMessage === 'string') {
-				return (<ErrorModal message={errorMessage}/>)
+				return (<h1>Under Development, Something went wrong</h1>)
+                //return (<ErrorModal message={errorMessage}/>)
 			}
 		}
 
