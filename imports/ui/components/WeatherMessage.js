@@ -1,57 +1,74 @@
 import React from 'react';
-
+import {Session} from 'meteor/session';
 import buildReportDaysList from './../../api/WeatherLogic';
 
-export default  WeatherMessage = ({temp, location, description, data, pictureUrl}) => {
+export default class WeatherMessage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            pictureURL: 'http://www.cuisson.co.uk/templates/cuisson/supersize/slideshow/img/progress.BAK-FOURTH.gif'
+        }
+    }
 
-	let weatherlist = data.list;
-	let reportDays = buildReportDaysList(weatherlist);
+    componentDidMount() { 
+        setTimeout(() => { // Replace this ugly hack with a Tracker
+            this.setState({
+                pictureURL: Session.get('picURL'),
+            });
+        }, 1000)  
+    }
 
-	return (
-		<div>
-			<div className="row">
-				<div className="col s12 m12 l8 offset-l2">
-					<div className="card">
-						<div className="card-image"> //below replace with pictureUrl
-							<img src="https://photos.smugmug.com/Landscapes/Panoramics/i-7S2gZ56/0/M/Heading%20to%20the%20key%20summit%20distant%20rain%20storm%20and%20light%20play-M.jpg" alt="{location} weather pic"/>
-							<span className="card-title"><h4>{location}</h4></span>
-						</div>
-						<div className="card-content">
-							<h5>Its currently {description} and {temp} degrees celsius in {location}!</h5>
-						</div>
-					</div>
-				</div>
-			</div>
-			<h4 className="center">5 day outlook for {location}</h4>
-			<div className="row">
-			
-			{reportDays.map((day) => {
-				return (
-					<div className="col s12 m6 l4">
-						<div className="card">
-							<div className="card-image">
-								<img src="./images/weather_icon.png" alt="weather image"/>
-								<span className="card-title">{day}</span>
-							</div>
-							<ul className="collection">
-							{weatherlist.map((report) => {
-								let time = report.dt_txt.split(" ")[1].substr(0, 5);
-								if (report.dt_txt.split(" ")[0] === day) {
-									return (
-										<li className="collection-item">Time: <strong>{time}</strong><br/>Conditions: <strong>{report.weather[0].description}</strong> & <strong>{report.main.temp}&deg;C</strong></li>
-									);
-								}
-							})}
-							</ul>
-						</div>
-					</div>
-				);
-			})}
+    render() {
+        let weatherlist = this.props.data.list;
+	    let reportDays = buildReportDaysList(weatherlist);
 
-			</div>
-		</div>
-	);
+        return (
+            <div>
+                <div className="row">
+                    <div className="col s12 m12 l8 offset-l2">
+                        <div className="card">
+                            <div className="card-image">
+                                <img src={this.state.pictureURL} alt={this.props.location}/>
+                                <span className="card-title"><h4>{this.props.location}</h4></span>
+                            </div>
+                            <div className="card-content">
+                                <h5>Its currently {this.props.description} and {this.props.temp} degrees celsius in {this.props.location}!</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h4 className="center">5 day outlook for {this.props.location}</h4>
+                <div className="row">
+                
+                {reportDays.map((day, index) => {
+                    return (
+                        <div key={index} className="col s12 m6 l4">
+                            <div className="card">
+                                <div className="card-image">
+                                    <img src="./images/weather_icon.png" alt="weather image"/>
+                                    <span className="card-title">{day}</span>
+                                </div>
+                                <ul className="collection">
+                                {weatherlist.map((report, index) => {
+                                    let time = report.dt_txt.split(" ")[1].substr(0, 5);
+                                    if (report.dt_txt.split(" ")[0] === day) {
+                                        return (
+                                            <li key={index} className="collection-item">Time: <strong>{time}</strong><br/>Conditions: <strong>{report.weather[0].description}</strong> & <strong>{report.main.temp}&deg;C</strong></li>
+                                        );
+                                    }
+                                })}
+                                </ul>
+                            </div>
+                        </div>
+                    );
+                })}
+
+                </div>
+            </div>
+        );
+    }
 }
+
 
 
 // return (

@@ -1,14 +1,17 @@
 import React from 'react';
+import {Session} from 'meteor/session';
 
 import WeatherForm from './WeatherForm';
 import WeatherMessage from './WeatherMessage';
 import getWeather from '../../api/openWeatherMap';
-import {getLatLong} from '../../api/Geocode';
+import {getPicUrl} from '../../api/Geocode';
 
 export default class Weather extends React.Component {
 	constructor() {
 		super();
-		this.state = {isLoading: false};
+		this.state = {
+            isLoading: false,
+        };
 		this.handleSearch = this.handleSearch.bind(this);
 		this.componentDidMount = this.componentDidMount.bind(this);
 		this.componentWillReceiveProps = this.componentWillReceiveProps.bind(this);
@@ -23,24 +26,17 @@ export default class Weather extends React.Component {
 			location: undefined,
 			temp: undefined,
 			data: undefined,
-			pictureUrl: undefined,
 		});
 
-
 		getWeather(location).then((data) => {
-			that.setState({
-				location: data.city.name,
-				temp: data.list[0].main.temp,
-				description: data.list[0].weather[0].description,
-				data: data
-			});
-			getLatLong(data.city.name).then((geodata) => {
-				console.log(geodata);
-				that.setState({
-					pictureUrl: "www.google.com", // CHANGE THIS!!!
-					isLoading: false,
-				})
-			})
+            getPicUrl(data.city.name);
+            that.setState({
+                location: data.city.name,
+                temp: data.list[0].main.temp,
+                description: data.list[0].weather[0].description,
+                isLoading: false,
+                data: data,
+            });
 		}, (e) => {
 			that.setState({
 				isLoading: false,
@@ -68,13 +64,13 @@ export default class Weather extends React.Component {
     }
 
 	render() {
-		let {isLoading, temp, location, description, errorMessage, data, pictureUrl} = this.state;
+		let {isLoading, temp, location, description, errorMessage, data} = this.state;
 
 		renderMessage = () => {
 			if (isLoading) {
 				return <h3 className="text-center">Fetching weather...</h3>;
 			} else if (temp && location && description) {
-                return <WeatherMessage description={description} location={location} temp={temp} data={data} pictureUrl={pictureUrl}/>;
+                return <WeatherMessage description={description} location={location} temp={temp} data={data} />; //
 			}
 		}
 		renderError = () => {

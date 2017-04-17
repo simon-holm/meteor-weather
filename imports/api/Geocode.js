@@ -1,11 +1,14 @@
 import axios from 'axios';
+import {Meteor} from 'meteor/meteor';
+import {Session} from 'meteor/session';
 
 const geocodeApiKey = "&key=AIzaSyCbSJwkG3zFJpzghzABdWFRa0W46A8a4T0";
 const placesApiKey = "&key=AIzaSyDnL97GNXpGjSGApcCNHZGymxUVEO4Do_c";
 const geocodeUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
-const googlePlaceUrl = "https://maps.googleapis.com/maps/api/place/radarsearch/json?location=";
+const googlePlaceUrl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=";
+const googlePictureUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference="
 const radius = "&radius=5000";
-const placeType = "&type=point_of_interest"; // Set type!
+const placeType = "&type=natural_feature, point_of_interest"; // Set type! natural_feature
 
 
 const geoCodeCityToLatLng = (city) => {
@@ -13,8 +16,6 @@ const geoCodeCityToLatLng = (city) => {
 	const geoUrl = `${geocodeUrl}${encodedCity}${geocodeApiKey}`;
 
 	const location = axios.get(geoUrl).then((response) => {
-		console.log("geoPosition");
-		console.log(response.data.results[0].geometry.location);
 		const latLng = response.data.results[0].geometry.location;
 		return latLng;
 	});
@@ -28,20 +29,33 @@ const buildPlacesURL = (latLngObj) => {
 	return placesURL;
 };
 
-const placesResponse = (placesURL) => {
-	axios.get(placesURL)
-		.then((response) => {
-
-		})
+const callWithPromise = (method, myParameters) => {
+    return new Promise((resolve, reject) => {
+        Meteor.call(method, myParameters, (err, res) => {
+            if (err) reject('Something went wrong');
+            resolve(res);
+        });
+    });
 }
 
-
-export const getLatLong = (city) => {
-	const builtPictureRef = geoCodeCityToLatLng(city)
+export const getPicUrl = (city) => {
+    geoCodeCityToLatLng(city)
 		.then((response) => {
-			buildPlacesURL(response)
+			const placeURL = buildPlacesURL(response);
+            callWithPromise('google.placesData', placeURL)
+                .then((response) => {
+                    let pictureRefList = [];
+                    response.map((place) => {
+                        if (place.photos) {
+                            place.photos.map((photo) => {
+                                pictureRefList.push(photo.photo_reference)
+                            });
+                        }
+                    });
+                    const selectedPicture = pictureRefList[Math.floor(Math.random()*pictureRefList.length)];
+                    Session.set('picURL', `${googlePictureUrl}${selectedPicture}${placesApiKey}`);
+                });    
 		});
-	console.log(builtPictureRef);
 }
 
 
@@ -96,7 +110,6 @@ export const getLatLong = (city) => {
 	
 
 
-};
 
 
 
@@ -112,3 +125,8 @@ export const getLatLong = (city) => {
 //https://maps.googleapis.com/maps/api/place/photo?location=-55.4297,13.8204&maxwidth=400&&key=YOUR_API_KEY
 
 // https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=55.4297,13.8204&radius=500&type=restaurant&keyword=cruise&key=AIzaSyCcDz1YXOuGPqSyZU20YHdrR49oll65ImI
+
+
+
+
+/// https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=CoQBdwAAACEg1B1F6t--B9fDqw2yJvshagOKh9qNcvdxnO3fE60-ecjJuAVk0OMZzuwZxOhhV1mVMOggZ3aAjg6711WQQcgJAlX22WUMUeRF6y04x8_lRSJ28UZYRptlg0xSdcttbOyhPSuog4aomqryaZEBZ1Wc_ds4Vlo5UA2c1v2bte_6EhCmZ2V7FsdSm-1K-HkLJkmOGhRx5eT4VN0x2VwLkFVU3ddRnfGURw&key=AIzaSyDnL97GNXpGjSGApcCNHZGymxUVEO4Do_c

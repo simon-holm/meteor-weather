@@ -23,5 +23,4 @@ const router = (
 
 Meteor.startup(() => {
     ReactDOM.render(router, document.getElementById('app'));
-	getLatLong("Ystad");
 });
