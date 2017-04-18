@@ -12,13 +12,17 @@ export default class WeatherMessage extends React.Component {
     }
 
     componentDidMount() {
-		Tracker.autorun(() => {
+		this.pictureTracker = Tracker.autorun(() => {
 			let sessionVal = Session.get('picURL');
 			this.setState({
 				pictureURL: sessionVal,
 			});
 		});
     }
+
+	componentWillUnmount() {
+		this.pictureTracker.stop();
+	}
 
     render() {
         let weatherlist = this.props.data.list;
