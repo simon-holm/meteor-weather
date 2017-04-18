@@ -1,21 +1,23 @@
 import React from 'react';
 import {Session} from 'meteor/session';
+import {Tracker} from 'meteor/tracker';
 import buildReportDaysList from './../../api/WeatherLogic';
 
 export default class WeatherMessage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            pictureURL: 'http://www.cuisson.co.uk/templates/cuisson/supersize/slideshow/img/progress.BAK-FOURTH.gif'
+            pictureURL: '',
         }
     }
 
-    componentDidMount() { 
-        setTimeout(() => { // Replace this ugly hack with a Tracker
-            this.setState({
-                pictureURL: Session.get('picURL'),
-            });
-        }, 1000)  
+    componentDidMount() {
+		Tracker.autorun(() => {
+			let sessionVal = Session.get('picURL');
+			this.setState({
+				pictureURL: sessionVal,
+			});
+		});
     }
 
     render() {

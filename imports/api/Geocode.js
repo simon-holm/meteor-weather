@@ -39,6 +39,7 @@ const callWithPromise = (method, myParameters) => {
 }
 
 export const getPicUrl = (city) => {
+	Session.set('picURL', 'http://www.brainpecks.com/wp-content/uploads/2014/02/loading-1.gif'); //set to a temp loading gif
     geoCodeCityToLatLng(city)
 		.then((response) => {
 			const placeURL = buildPlacesURL(response);
